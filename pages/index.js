@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, Container, Flex, Heading, VStack, useBreakpointValue, Button, Input } from "@chakra-ui/react";
+import { Box, Container, Flex, Heading, VStack, useBreakpointValue, Button, Input, Textarea } from "@chakra-ui/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/router";
 
@@ -23,7 +23,9 @@ const Sidebar = ({ isOpen, onClose }) => {
           }}
         >
           <VStack spacing={4} align="flex-start">
-            <Heading size="md" color="black">Sidebar</Heading>
+            <Button ml="5px" width="280px">
+              New chat  
+            </Button>
             {/* 네비게이션 항목들을 추가할 수 있습니다 */}
             <Box color="black">Nav Item 1</Box>
             <Box color="black">Nav Item 2</Box>
@@ -71,8 +73,15 @@ const ChatBar = () => {
     return(
         <VStack>
         <Flex mt={4} alignItems="flex-end">
-        <Input value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Type your message" />
-        <Button ml={2} onClick={handleSendMessage}>Send</Button>
+        <Textarea 
+          ml ={200} 
+          mb={5} 
+          width= "lg" 
+          resize = "vertical" 
+          style={{ height: "50px" }}  
+          value={message} 
+          onChange={(e) => setMessage(e.target.value)} placeholder="Type your message" />
+        <Button ml={2} mb={5} style={{ height: "80px" }} onClick={handleSendMessage}>Send</Button>
         </Flex>
         </VStack>
         
@@ -95,7 +104,18 @@ const Page = () => {
         <Sidebar isOpen={isOpen} onClose={toggleSidebar} />
         <MainContent isSidebarOpen={isOpen} />
       </Flex>
-      <ChatBar/>
+      <footer style={{
+        position: 'fixed',
+        bottom: '0',
+        left: '0',
+        width: '100%',
+        
+        padding: '10px',
+        textAlign: 'center'
+        
+      }}>
+        <ChatBar/> {/* ChatBar 컴포넌트를 footer 내에 위치시킴 */}
+      </footer>
     </Container>
   );
 };
