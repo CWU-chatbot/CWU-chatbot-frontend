@@ -9,17 +9,35 @@ import {
   Heading,
   Text,
   Link,
+  Flex,
 } from "@chakra-ui/react";
+import { motion } from 'framer-motion';
 
 const LoginForm = () => {
   return (
+    <Box>
+      <Flex>
+      <Box width="80%">
+        <Text m="30px">
+          CWU_chat
+        </Text>
+        <Box>
+        <motion.h1 
+          animate={{fontSize : 50, color : '#ff2994'}}
+        >
+          Welcome
+        </motion.h1>
+        </Box>
+      </Box>
+    
     <Box
-      w="400px"
+      w="20%"
+      h="100vh"
       p={8}
       borderWidth={1}
-      borderRadius={8}
+      
       boxShadow="lg"
-      bg="white"
+      bg="black"
     >
       <Heading mb={4} textAlign="center">
         Welcome back!
@@ -36,7 +54,7 @@ const LoginForm = () => {
           <FormLabel>Password</FormLabel>
           <Input type="password" placeholder="Enter your password" />
         </FormControl>
-        <Link href='./login'>
+        <Link href='./'>
         <Button colorScheme="blue" width="full">
           Log In
         </Button>
@@ -49,6 +67,9 @@ const LoginForm = () => {
           Sign Up
         </Link>
       </Text>
+    </Box>
+      </Flex>
+      
     </Box>
   );
 };
