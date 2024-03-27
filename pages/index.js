@@ -1,123 +1,80 @@
-import { useState } from "react";
-import { Box, Container, Flex, Heading, VStack, useBreakpointValue, Button, Input, Textarea } from "@chakra-ui/react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useRouter } from "next/router";
+// pages/index.js
+import { useState, useRef, useEffect } from 'react';
+import { Box, Button, Container, Flex, Input, VStack, Text } from '@chakra-ui/react';
+import { motion } from 'framer-motion';
 
-const Sidebar = ({ isOpen, onClose }) => {
-  return (
-    <AnimatePresence exitBeforeEnter={false}>
-      {isOpen && (
-        <motion.div
-          initial={{ x: -250 }}
-          animate={{ x: 0 }}
-          exit={{ x: -300 }}
-          transition={{ type: "spring", stiffness: 200, damping: 50 }}
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            bottom: 0,
-            width: 300,
-            backgroundColor: "gray",
-            padding: 4
-          }}
-        >
-          <VStack spacing={4} align="flex-start">
-            <Button ml="5px" width="280px">
-              New chat  
-            </Button>
-            {/* 네비게이션 항목들을 추가할 수 있습니다 */}
-            <Box color="black">Nav Item 1</Box>
-            <Box color="black">Nav Item 2</Box>
-            <Box color="black">Nav Item 3</Box>
-            <Button onClick={onClose}>Close</Button>
-          </VStack>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
-};
-
-const MainContent = ({ isSidebarOpen }) => {
-  
-  
+export default function Home() {
+  const [messages, setMessages] = useState([]);
+  const [inputValue, setInputValue] = useState('');
+  const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+  const bottomOfMessages = useRef(null);
 
   const handleSendMessage = () => {
-    if (message.trim() !== "") {
-      setChatHistory([...chatHistory, message]);
-      setMessage("");
-    }
+    if (!inputValue.trim()) return;
+    setMessages([...messages, { id: Date.now(), text: inputValue }]);
+    setInputValue('');
   };
 
-  return (
-    <Box p={4} flex="1" style={{ overflowY: "auto" }}>
-      <Heading size="md">Main Content</Heading>
-      {/* 메인 콘텐츠를 추가할 수 있습니다 */}
-      
-    </Box>
-  );
-};
-
-const ChatBar = () => {
-
-    const [message, setMessage] = useState("");
-    const [chatHistory, setChatHistory] = useState([]);
-
-    const handleSendMessage = () => {
-        if (message.trim() !== "") {
-          setChatHistory([...chatHistory, message]);
-          setMessage("");
-        }
-      };
-
-    return(
-        <VStack>
-        <Flex mt={4} alignItems="flex-end">
-        <Textarea 
-          ml ={200} 
-          mb={5} 
-          width= "lg" 
-          resize = "vertical" 
-          style={{ height: "50px" }}  
-          value={message} 
-          onChange={(e) => setMessage(e.target.value)} placeholder="Type your message" />
-        <Button ml={2} mb={5} style={{ height: "80px" }} onClick={handleSendMessage}>Send</Button>
-        </Flex>
-        </VStack>
-        
-    )
-    
-}
-
-const Page = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter();
+  useEffect(() => {
+    bottomOfMessages.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   const toggleSidebar = () => {
-    setIsOpen(!isOpen);
+    setIsSidebarVisible(!isSidebarVisible);
+  };
+
+  const sidebarVariants = {
+    open: { x: 0 },
+    closed: { x: '-100%' },
   };
 
   return (
-    <Container maxW="container.xl">
-      <Flex>
-        <Button onClick={toggleSidebar}>Toggle Sidebar</Button>
-        <Sidebar isOpen={isOpen} onClose={toggleSidebar} />
-        <MainContent isSidebarOpen={isOpen} />
+    <Container maxW="container.xl" p={0}>
+      <Flex h={{ base: 'auto', md: '100vh' }}>
+
+        {/* Sidebar with Animation */}
+        <motion.div
+          initial="closed"
+          animate={isSidebarVisible ? "open" : "closed"}
+          variants={sidebarVariants}
+          transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+          style={{ width: '250px', height: '100%', backgroundColor: 'blue.500' }}
+        >
+          <Box>
+            ddd
+          </Box>
+        </motion.div>
+
+        {/* Main Content Area */}
+        <Box flex={1} display="flex" flexDirection="column" height="100vh">
+          {/* Chat Area */}
+          <VStack spacing={4} align="stretch" overflowY="auto" flexGrow={1}>
+            {messages.map((message) => (
+              <Box key={message.id} bg="black" p={4} borderRadius="md">
+                <Text color="white">{message.text}</Text>
+              </Box>
+            ))}
+            <div ref={bottomOfMessages}></div>
+          </VStack>
+
+          {/* ChatBar fixed at the bottom */}
+          <Box p={4} bg="black" boxShadow="md">
+            <Input
+              placeholder="Type a message..."
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+            />
+            <Button ml={2} onClick={handleSendMessage}>Send</Button>
+          </Box>
+        </Box>
+
       </Flex>
-      <footer style={{
-        position: 'fixed',
-        bottom: '0',
-        left: '0',
-        width: '100%',
-        
-        padding: '10px',
-        textAlign: 'center'
-        
-      }}>
-        <ChatBar/> {/* ChatBar 컴포넌트를 footer 내에 위치시킴 */}
-      </footer>
+
+      {/* Toggle Sidebar Button */}
+      <Button position="fixed" top="4" left="4" onClick={toggleSidebar}>
+        {isSidebarVisible ? 'Hide Sidebar' : 'Show Sidebar'}
+      </Button>
     </Container>
   );
-};
-
-export default Page;
+}
