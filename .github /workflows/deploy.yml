@@ -29,6 +29,5 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         script: |
           cd /home/ubuntu
-          docker-compose down
           docker-compose pull cwu-front
-          docker-compose up -d
+          docker-compose up -d cwu-front
