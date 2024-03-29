@@ -1,6 +1,5 @@
-// pages/index.js
 import { useState, useRef, useEffect } from 'react';
-import { Box, Button, Container, Flex, Input, VStack, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Input, VStack, Text } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 
 export default function Home() {
@@ -28,26 +27,45 @@ export default function Home() {
     closed: { x: '-100%' },
   };
 
+  // 사이드바 너비를 정의
+  const sidebarWidth = '325px';
+
   return (
-    <Container maxW="container.xl" p={0}>
+    <Box>
       <Flex h={{ base: 'auto', md: '100vh' }}>
 
-        {/* Sidebar with Animation */}
-        <motion.div
+        {/* Sidebar with Animation and Drag */}
+        <motion.Box
           initial="closed"
           animate={isSidebarVisible ? "open" : "closed"}
           variants={sidebarVariants}
-          transition={{ type: 'spring', stiffness: 260, damping: 20 }}
-          style={{ width: '250px', height: '100%', backgroundColor: 'blue.500' }}
+          transition={{ type: 'spring', stiffness: 260, damping: 30 }}
+          drag="x"
+          dragConstraints={{ left: 0, right: 0 }}
+          onDragEnd={(event, info) => {
+            if (info.offset.x > 100) {
+              setIsSidebarVisible(true);
+            } else {  
+              setIsSidebarVisible(false);
+            }
+          }}
+          style={{ width: sidebarWidth, height: '100%', backgroundColor: 'gray' }}
         >
-          <Box>
-            ddd
-          </Box>
-        </motion.div>
+          
+        </motion.Box>
 
-        {/* Main Content Area */}
-        <Box flex={1} display="flex" flexDirection="column" height="100vh">
-          {/* Chat Area */}
+        {/* 메인 영역 */}
+        <Box
+          flex={1}
+          display="flex"
+          flexDirection="column"
+          height="100vh"
+          style={{
+            transition: 'margin-left 0.5s ease',
+            marginLeft: isSidebarVisible ? sidebarWidth : '0',
+          }}
+        >
+          {/* 채팅 영역 */}
           <VStack spacing={4} align="stretch" overflowY="auto" flexGrow={1}>
             {messages.map((message) => (
               <Box key={message.id} bg="black" p={4} borderRadius="md">
@@ -57,24 +75,30 @@ export default function Home() {
             <div ref={bottomOfMessages}></div>
           </VStack>
 
-          {/* ChatBar fixed at the bottom */}
-          <Box p={4} bg="black" boxShadow="md">
-            <Input
-              placeholder="Type a message..."
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-            />
-            <Button ml={2} onClick={handleSendMessage}>Send</Button>
+          {/* 하단 채팅 인풋바 */}
+          <Box p={3} boxShadow="md" >
+            <Flex justifyContent="center" alignItems="center">
+              <Input
+                placeholder="Type a message..."
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                width="600px"
+                mb="30px"
+                height="100px"
+              />
+              <Button mb="30px" ml={2} onClick={handleSendMessage}>
+                Send
+              </Button>
+            </Flex>
           </Box>
         </Box>
-
       </Flex>
 
       {/* Toggle Sidebar Button */}
       <Button position="fixed" top="4" left="4" onClick={toggleSidebar}>
         {isSidebarVisible ? 'Hide Sidebar' : 'Show Sidebar test'}
       </Button>
-    </Container>
+    </Box>
   );
 }
