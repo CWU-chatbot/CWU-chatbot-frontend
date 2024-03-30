@@ -27,8 +27,7 @@ export default function Home() {
     closed: { x: '-100%' },
   };
 
-  // 사이드바 너비를 정의
-  const sidebarWidth = '325px';
+  const sidebarWidth = '325px'; // 사이드바 너비 정의
 
   return (
     <Box>
@@ -45,7 +44,7 @@ export default function Home() {
           onDragEnd={(event, info) => {
             if (info.offset.x > 100) {
               setIsSidebarVisible(true);
-            } else {  
+            } else {
               setIsSidebarVisible(false);
             }
           }}
@@ -63,6 +62,7 @@ export default function Home() {
           style={{
             transition: 'margin-left 0.5s ease',
             marginLeft: isSidebarVisible ? sidebarWidth : '0',
+            width: isSidebarVisible ? `calc(100vw - ${sidebarWidth})` : '100vw', // 사이드바 상태에 따라 너비 조정
           }}
         >
           {/* 채팅 영역 */}
@@ -76,7 +76,7 @@ export default function Home() {
           </VStack>
 
           {/* 하단 채팅 인풋바 */}
-          <Box p={3} boxShadow="md" >
+          <Box p={3} boxShadow="md">
             <Flex justifyContent="center" alignItems="center">
               <Input
                 placeholder="Type a message..."
