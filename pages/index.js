@@ -97,7 +97,7 @@ export default function Home() {
 
       {/* Toggle Sidebar Button */}
       <Button position="fixed" top="4" left="4" onClick={toggleSidebar}>
-        {isSidebarVisible ? 'Hide Sidebar' : 'Show Sidebar'}
+        {isSidebarVisible ? 'Hide Sidebar' : 'Show Sidebar test'}
       </Button>
     </Box>
   );
