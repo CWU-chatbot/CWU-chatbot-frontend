@@ -70,7 +70,7 @@ const LoginForm = () => {
       
           </Stack>
           <Text mt={4} textAlign="center">
-            Don't have an account?{" "}
+            Don&apost have an account?{" "}
             <Link color="blue.500" onClick={onOpen}>
               Sign Up
             </Link>
