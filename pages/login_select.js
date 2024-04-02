@@ -32,7 +32,7 @@ const LoginForm = () => {
 
   return (
     <Box>
-      <Flex>
+      <Flex width="100vw">
         <Box width="80%">
           <Text m="30px">
             CWU_chat
